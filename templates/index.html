@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+	<h1 class="text-center">THE CHEAPEST FLIGHT OF THE MONTH</h1>
+
+	<form class="needs-validation" novalidate>
+		<div class="form-row">
+			<div class="col-md-6 mb-3">
+				<label for="validationCustom01">From</label>
+				<input type="text" class="form-control" id="validationCustom01" name="fly_from" required>
+				<div class="valid-feedback">
+					Looks good!
+				</div>
+				<div class="invalid-feedback">
+					Error!
+				</div>
+			</div>
+			<div class="col-md-6 mb-3">
+				<label for="validationCustom02">To</label>
+				<input type="text" class="form-control" id="validationCustom02" name="fly_to" required>
+				<div class="valid-feedback">
+					Looks good!
+				</div>
+				<div class="invalid-feedback">
+					Error!
+				</div>
+			</div>
+		</div>
+		<button class="btn btn-primary" type="submit">Search</button>
+	</form>
+
+	<div class="row mt-5">
+	  {% for flight in flights %}
+		<div class="col col-md-4 mb-5">
+			<div class="card">
+				<h5 class="card-header">{{flight.price}} tg</h5>
+				<div class="card-body">
+					<h5 class="card-title">{{flight.airline}}</h5>
+					<p class="card-text">
+						{% if flight.flights_invalid %}
+							<h5 class="text-danger">Invalid</h5>
+						{% else %}
+							<h5 class="text-success">Valid</h5>
+						{% endif %}
+						<p>
+							From {{flight.fly_from}} To {{flight.fly_to}}
+						</p>
+						<p>
+							Start: {{flight.d_time}}
+						</p>
+						<p>
+							End: {{flight.a_time}}
+						</p>
+						<p>
+						Duration: {{flight.fly_duration}}
+						</p>
+					</p>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+  </div>
+
+</div>
+{% endblock content %}

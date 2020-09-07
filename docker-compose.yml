@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    volumes:
+      - ${PWD}/db.sqlite3:/app/db.sqlite3
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=9gu%ang5#kn)#wxrzbo&_o-ko5z*(av=t%amzt%d013v=-weei
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    depends_on:
+      - redis
+  redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+  celery:
+    build: .
+    command: celery -A aviatatask worker -l info
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=9gu%ang5#kn)#wxrzbo&_o-ko5z*(av=t%amzt%d013v=-weei
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    depends_on:
+      - redis
+  celery-beat:
+    build: .
+    command: celery -A aviatatask beat -l info
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=9gu%ang5#kn)#wxrzbo&_o-ko5z*(av=t%amzt%d013v=-weei
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    depends_on:
+      - redis
