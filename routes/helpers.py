@@ -3,14 +3,6 @@ import calendar
 from .data import Data
 
 
-def get_cheapest_flight(flights):
-    """Return cheapest flight from response of request"""
-    cheapest_flight = {}
-    for flight in flights:
-        if not cheapest_flight or cheapest_flight.get('price') > flight.get('price'):
-            cheapest_flight = flight
-    return cheapest_flight
-
 def get_key_from_cities(from_city, to_city, date):
     """Return key from cities codes or names and date"""
     if from_city in Data.CITY_CODES:

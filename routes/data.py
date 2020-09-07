@@ -31,7 +31,8 @@ class Data:
     GET_FLIGHTS_URL = 'https://api.skypicker.com/flights'
     GET_FLIGHTS_DEFAULT_PARAMS = {
         'partner': 'picky',
-        'curr': 'KZT'
+        'curr': 'KZT',
+        'asc': 1
     }
 
     CHECK_FLIGHT_URL = 'https://booking-api.skypicker.com/api/v0.1/check_flights'

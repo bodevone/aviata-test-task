@@ -28,7 +28,7 @@ def update_flight(city_code_from, city_code_to, date):
     if not flights:
         return
 
-    cheapest_flight = get_cheapest_flight(flights)
+    cheapest_flight = flights[0]
     cheapest_flight_data = {}
 
     d_time = cheapest_flight.get('dTime')
@@ -40,8 +40,12 @@ def update_flight(city_code_from, city_code_to, date):
     fly_duration = cheapest_flight.get('fly_duration')
     cheapest_flight_data['fly_duration'] = fly_duration
 
-    airline = cheapest_flight.get('airlines')[0]
-    cheapest_flight_data['airline'] = airline
+    airlines = ''
+    for airline in cheapest_flight.get('airlines'):
+        if airlines:
+            airlines += ' '
+        airlines += airline
+    cheapest_flight_data['airlines'] = airlines
 
     booking_token = cheapest_flight.get('booking_token')
     cheapest_flight_data['booking_token'] = booking_token
