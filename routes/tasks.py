@@ -9,16 +9,17 @@ from .helpers import get_dates, get_cheapest_flight
 
 @app.task
 def update_flights():
-    date_from, date_to = get_dates()
-    for city_code1, city_code2 in Data.ROUTES:
-        update_flight.delay(city_code1, city_code2, date_from, date_to)
-        update_flight.delay(city_code2, city_code1, date_from, date_to)
+    dates = get_dates()
+    for date in dates:
+        for city_code1, city_code2 in Data.ROUTES:
+            update_flight.delay(city_code1, city_code2, date)
+            update_flight.delay(city_code2, city_code1, date)
 
 @app.task
-def update_flight(city_code_from, city_code_to, date_from, date_to):
+def update_flight(city_code_from, city_code_to, date):
     cache = Cache()
 
-    payload = {'fly_from': city_code_from, 'fly_to': city_code_to, 'date_from': date_from, 'date_to': date_to}
+    payload = {'fly_from': city_code_from, 'fly_to': city_code_to, 'date_from': date, 'date_to': date}
     payload.update(Data.GET_FLIGHTS_DEFAULT_PARAMS)
     response = requests.get(Data.GET_FLIGHTS_URL, params=payload)
 
@@ -50,7 +51,7 @@ def update_flight(city_code_from, city_code_to, date_from, date_to):
     booking_token = cheapest_flight.get('booking_token')
     cheapest_flight_data['booking_token'] = booking_token
 
-    flight_key = f'{city_code_from}{city_code_to}'
+    flight_key = f'{city_code_from}{city_code_to}{date}'
     cache.update_flight_info(flight_key, cheapest_flight_data)
 
     check_flight.delay(flight_key, booking_token)
@@ -84,8 +85,7 @@ def check_flight(flight_key, token):
         return
 
     if price_change:
-        date_from, date_to = get_dates()
-        update_flight.delay(flight_key[:3], flight_key[3:], date_from, date_to)
+        update_flight.delay(flight_key[:3], flight_key[3:6], flight_key[6:])
         return
 
     price = flight.get('conversion').get('amount')

@@ -5,7 +5,6 @@ class Cache:
     """
     Model with methods for interaction with cache
     flight_ : from city + to city -> data about flight
-    token_ : from city + to city -> booking token of flight
     checked_ : from city + to city -> data about price and availability of flight
     """
     def get_flight_from_key(self, key):
@@ -30,15 +29,15 @@ class Cache:
         check_flight_data = cache.get(f'checked_{key}')
         if check_flight_data:
             flight_data.update(check_flight_data)
-        flight_data.update({'fly_from': key[:3], 'fly_to': key[3:]})
+        flight_data.update({'fly_from': key[:3], 'fly_to': key[3:6]})
         return flight_data
     
     def get_booking_tokens(self):
         tokens = []
-        tokens_keys = cache.keys('token_*')
-        for key in tokens_keys:
-            token = cache.get(key)
-            tokens.append((key[6:], token))
+        flight_keys = cache.keys('flight_*')
+        for key in flight_keys:
+            token = cache.get(key).get('booking_token')
+            tokens.append((key[7:], token))
         return tokens
     
     def update_flight_checked(self, flight_key, check_flight_data):

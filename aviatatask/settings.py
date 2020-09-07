@@ -15,7 +15,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='secret_key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get('DEBUG', default=1))
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', default='*').split(' ')
 
 # Application definition
 
@@ -124,7 +124,7 @@ CELERY_RESULT_BACKEND = 'redis://redis:6379'
 CELERY_BEAT_SCHEDULE = {
     'update_flights': {
         'task': 'routes.tasks.update_flights',
-        'schedule': crontab(minute='*/1'),
+        'schedule': crontab(minute='*/5'),
     },
     'check_flights': {
         'task': 'routes.tasks.check_flights',

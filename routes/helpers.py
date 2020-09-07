@@ -11,8 +11,8 @@ def get_cheapest_flight(flights):
             cheapest_flight = flight
     return cheapest_flight
 
-def get_key_from_cities(from_city, to_city):
-    """Return key from cities codes or names"""
+def get_key_from_cities(from_city, to_city, date):
+    """Return key from cities codes or names and date"""
     if from_city in Data.CITY_CODES:
         from_city_code = from_city
     else:
@@ -26,25 +26,19 @@ def get_key_from_cities(from_city, to_city):
     if not from_city_code or not to_city_code:
         return
 
-    key = f'{from_city_code}{to_city_code}'
+    key = f'{from_city_code}{to_city_code}{date}'
     return key
     
 def get_dates():
-    """Return pair of dates of current and next months"""
-    this_date = datetime.datetime.today()
-    next_date = get_next_month(this_date)
-    date_from = this_date.strftime('%d/%m/%Y')
-    date_to = next_date.strftime('%d/%m/%Y')
-    return date_from, date_to
+    """Return dates from current date up to next month"""
+    curr_date = datetime.datetime.today()
+    curr_day = curr_date.day
+    dates = []
+    while not dates or curr_date.day != 10:
+        dates.append(format_date(curr_date))
+        curr_date += datetime.timedelta(days=1)
+    dates.append(format_date(curr_date))
+    return dates
 
-def get_next_month(this_date):
-    """Return date of the same day of the next month"""
-    next_year = this_date.year
-    next_month = this_date.month + 1
-    if next_month > 12:
-        next_year += 1
-        next_month = 1
-    last_day_of_next_month = calendar.monthrange(next_year, next_month)[1]
-    next_day = min(this_date.day, last_day_of_next_month)
-    next_date = this_date.replace(year=next_year, month=next_month, day=next_day)
-    return next_date
+def format_date(date):
+    return date.strftime('%d/%m/%Y')

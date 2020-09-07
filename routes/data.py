@@ -18,14 +18,14 @@ class Data:
     ROUTES = (
         ('ALA', 'TSE'),
         ('TSE', 'ALA'),
-        ('ALA', 'MOW'),
-        ('MOW', 'ALA'),
-        ('ALA', 'CIT'),
-        ('CIT', 'ALA'),
-        ('TSE', 'MOW'),
-        ('MOW', 'TSE'),
-        ('TSE', 'LED'),
-        ('LED', 'TSE'),
+        # ('ALA', 'MOW'),
+        # ('MOW', 'ALA'),
+        # ('ALA', 'CIT'),
+        # ('CIT', 'ALA'),
+        # ('TSE', 'MOW'),
+        # ('MOW', 'TSE'),
+        # ('TSE', 'LED'),
+        # ('LED', 'TSE'),
     )
 
     GET_FLIGHTS_URL = 'https://api.skypicker.com/flights'

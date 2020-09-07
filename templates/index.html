@@ -3,13 +3,13 @@
 {% block content %}
 
 <div class="container">
-	<h1 class="text-center">THE CHEAPEST FLIGHT OF THE MONTH</h1>
+	<h1 class="text-center">THE CHEAPEST FLIGHTS</h1>
 
 	<form class="needs-validation" novalidate>
 		<div class="form-row">
-			<div class="col-md-6 mb-3">
+			<div class="col-md-4 mb-3">
 				<label for="validationCustom01">From</label>
-				<input type="text" class="form-control" id="validationCustom01" name="fly_from" required>
+				<input type="text" class="form-control" id="validationCustom01" name="fly_from" placeholder="Example: Almaty" required>
 				<div class="valid-feedback">
 					Looks good!
 				</div>
@@ -17,9 +17,19 @@
 					Error!
 				</div>
 			</div>
-			<div class="col-md-6 mb-3">
+			<div class="col-md-4 mb-3">
 				<label for="validationCustom02">To</label>
-				<input type="text" class="form-control" id="validationCustom02" name="fly_to" required>
+				<input type="text" class="form-control" id="validationCustom02" name="fly_to" placeholder="Example: Astana" required>
+				<div class="valid-feedback">
+					Looks good!
+				</div>
+				<div class="invalid-feedback">
+					Error!
+				</div>
+			</div>
+			<div class="col-md-4 mb-3">
+				<label for="validationCustom03">Date</label>
+				<input type="text" class="form-control" id="validationCustom03" name="date" placeholder="Example: 16/09/2020" required>
 				<div class="valid-feedback">
 					Looks good!
 				</div>
@@ -35,7 +45,13 @@
 	  {% for flight in flights %}
 		<div class="col col-md-4 mb-5">
 			<div class="card">
-				<h5 class="card-header">{{flight.price}} tg</h5>
+				<h5 class="card-header">
+				{% if flight.price %}
+					{{flight.price}} tg
+				{% else %}
+					TBA
+				{% endif %}
+				</h5>
 				<div class="card-body">
 					<h5 class="card-title">{{flight.airline}}</h5>
 					<p class="card-text">
