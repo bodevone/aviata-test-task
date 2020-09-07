@@ -4,12 +4,11 @@ import requests
 from aviatatask.celery import app
 from .cache import Cache
 from .data import Data
-from .helpers import get_dates, get_cheapest_flight, get_flight_key
+from .helpers import get_dates, get_cheapest_flight
 
 
 @app.task
 def update_flights():
-    print('STARTED')
     date_from, date_to = get_dates()
     for city_code1, city_code2 in Data.ROUTES:
         update_flight.delay(city_code1, city_code2, date_from, date_to)
@@ -32,8 +31,6 @@ def update_flight(city_code_from, city_code_to, date_from, date_to):
         return
 
     cheapest_flight = get_cheapest_flight(flights)
-    flight_key = get_flight_key(city_code_from, city_code_to)
-
     cheapest_flight_data = {}
 
     d_time = cheapest_flight.get('dTime')
@@ -53,8 +50,7 @@ def update_flight(city_code_from, city_code_to, date_from, date_to):
     booking_token = cheapest_flight.get('booking_token')
     cheapest_flight_data['booking_token'] = booking_token
 
-    print(flight_key, cheapest_flight_data)
-
+    flight_key = f'{city_code_from}{city_code_to}'
     cache.update_flight_info(flight_key, cheapest_flight_data)
 
     check_flight.delay(flight_key, booking_token)
@@ -68,8 +64,6 @@ def check_flights():
 
 @app.task
 def check_flight(flight_key, token):
-    print('CHECKING ' + flight_key)
-
     cache = Cache()
 
     payload = {'booking_token': token}
@@ -85,8 +79,6 @@ def check_flight(flight_key, token):
     flights_invalid = flight.get('flights_invalid')
     price_change = flight.get('price_change')
 
-    print(flights_checked, flights_invalid, price_change)
-
     if not flights_checked:
         check_flight.delay(flight_key, token)
         return
@@ -99,4 +91,4 @@ def check_flight(flight_key, token):
     price = flight.get('conversion').get('amount')
     check_flight_data = {'price': price, 'flights_invalid': flights_invalid}
 
-    cache.flight_checked(flight_key, check_flight_data)
+    cache.update_flight_checked(flight_key, check_flight_data)

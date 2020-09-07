@@ -1,12 +1,18 @@
 from django.core.cache import cache
 
 class Data:
-    NAMES = {
-        'ALA': ['Almaty', 'Алматы'],
-        'TSE': ['Astana', 'Астана', 'Nur-Sultan', 'Нур-Султан'],
-        'MOW': ['Moscow', 'Москва'],
-        'CIT': ['Shymkent', 'Шымкент'],
-        'LED': ['Saint Petersburg', 'Санкт-Петербург']
+    """Class to store global data about cities, routes and requests"""
+    
+    "To check for city code in search query"
+    CITY_CODES = {'ALA', 'TSE', 'MOW', 'CIT', 'LED'}
+
+    "To match from search query to city code"
+    CITY_NAMES_TO_CODES = {
+        'Almaty': 'ALA',
+        'Astana': 'TSE',
+        'Moscow': 'MOW',
+        'Shymkent': 'CIT',
+        'Saint Petersburg': 'LED'
     }
 
     ROUTES = (
@@ -35,4 +41,5 @@ class Data:
         'currency': 'KZT'
     }
 
-    GET_FLIGHTS_TIMEOUT = 24 * 60 * 60
+    "To store flight data in cache for 24 hours"
+    CACHE_TIMEOUT = 24 * 60 * 60
