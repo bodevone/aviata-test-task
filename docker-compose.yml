@@ -6,8 +6,6 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - 8000:8000
-    volumes:
-      - ${PWD}/db.sqlite3:/app/db.sqlite3
     environment:
       - DEBUG=1
       - SECRET_KEY=9gu%ang5#kn)#wxrzbo&_o-ko5z*(av=t%amzt%d013v=-weei
