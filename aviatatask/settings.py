@@ -124,10 +124,10 @@ CELERY_RESULT_BACKEND = 'redis://redis:6379'
 CELERY_BEAT_SCHEDULE = {
     'update_flights': {
         'task': 'routes.tasks.update_flights',
-        'schedule': crontab(minute='*/5'),
+        'schedule': crontab(minute=0, hour=0),
     },
     'check_flights': {
         'task': 'routes.tasks.check_flights',
-        'schedule': crontab(minute='*/2'),
+        'schedule': crontab(minute='*/30'),
     }
 }

@@ -34,11 +34,17 @@ def get_dates():
     curr_date = datetime.datetime.today()
     curr_day = curr_date.day
     dates = []
-    while not dates or curr_date.day != 10:
-        dates.append(format_date(curr_date))
+    while not dates or curr_date.day != curr_day:
+        dates.append(format_from_datetime(curr_date))
         curr_date += datetime.timedelta(days=1)
-    dates.append(format_date(curr_date))
+    dates.append(format_from_datetime(curr_date))
     return dates
 
-def format_date(date):
+def format_from_datetime(date):
+    """Return formatted date string from datetime object"""
     return date.strftime('%d/%m/%Y')
+
+def format_from_timestamp(date_str):
+    """Return formatted date string from UTC timestamp string"""
+    formatted_date_str = datetime.datetime.fromtimestamp(int(date_str)).strftime('%H:%M %d/%m')
+    return formatted_date_str

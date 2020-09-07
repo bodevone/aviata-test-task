@@ -1,10 +1,8 @@
-from celery.decorators import task
-import datetime
 import requests
 from aviatatask.celery import app
 from .cache import Cache
 from .data import Data
-from .helpers import get_dates, get_cheapest_flight
+from .helpers import get_dates, get_cheapest_flight, format_from_timestamp
 
 
 @app.task
@@ -27,7 +25,6 @@ def update_flight(city_code_from, city_code_to, date):
         return
     
     flights = response.json().get('data')
-
     if not flights:
         return
 
@@ -35,12 +32,10 @@ def update_flight(city_code_from, city_code_to, date):
     cheapest_flight_data = {}
 
     d_time = cheapest_flight.get('dTime')
-    d_time_str = datetime.datetime.fromtimestamp(int(d_time)).strftime('%H:%M %d/%m')
-    cheapest_flight_data['d_time'] = d_time_str
+    cheapest_flight_data['d_time'] = format_from_timestamp(d_time)
 
     a_time = cheapest_flight.get('aTime')
-    a_time_str = datetime.datetime.fromtimestamp(int(a_time)).strftime('%H:%M %d/%m')
-    cheapest_flight_data['a_time'] = a_time_str
+    cheapest_flight_data['a_time'] = format_from_timestamp(a_time)
 
     fly_duration = cheapest_flight.get('fly_duration')
     cheapest_flight_data['fly_duration'] = fly_duration
